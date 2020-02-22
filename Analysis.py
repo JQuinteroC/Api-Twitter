@@ -36,20 +36,13 @@ cantidad = int(input("Ingrese la cantidad de Tweets a analizar: "))
 caracter1 = input("Ingrese una parabra clave: ")
 caracter2 = input("Ingrese una parabra clave: ")
 caracter3 = input("Ingrese una parabra clave: ")
-#api.get_user("RamoColombia")
 ###########################Buscar Tweets#######################################
 filtro = busqueda + " -filter:retweets"
 
-
-#caracter(caracter1, caracter2, caracter3, busqueda, cantidad)
-
 for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia",q = filtro, 
                            tweet_mode = "extended").items(cantidad):
-    #print(json.dumps(tweet._json, indent=2))
     api.get_user("RamoColombia").statuses_count
-    #print(tweet._json["full_text"])
-    #print()
-#print("\n"*10)
+
 for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia",
                            q = filtro).items(cantidad):
     #analisis de los tweets 
