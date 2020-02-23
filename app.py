@@ -1,12 +1,18 @@
 from flask import Flask,render_template
+from flask import request
 import form
-from datetime import datetime
-
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods = ['GET', 'POST'])
 def index():
-    return render_template('home.html')
+    comment = form.CommentForm(request.form)
+    if request.method == 'POST' and comment.validate():
+        
+        print (comment.producto.data)
+        print (comment.fecha_In.data)
+        print (comment.fecha_Out.data)
+
+    return render_template('home.html', form = comment)
     
 
 @app.errorhandler(404)
