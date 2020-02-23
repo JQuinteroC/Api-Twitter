@@ -33,9 +33,6 @@ api=tweepy.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True
 ##Ingreso de parametros a buscar (palabras/tweets)
 busqueda = input("Ingrese la palabra a buscar: ")
 cantidad = int(input("Ingrese la cantidad de Tweets a analizar: "))   
-caracter1 = input("Ingrese una parabra clave: ")
-caracter2 = input("Ingrese una parabra clave: ")
-caracter3 = input("Ingrese una parabra clave: ")
 #api.get_user("RamoColombia")
 ###########################Buscar Tweets#######################################
 filtro = busqueda + " -filter:retweets"
@@ -86,8 +83,8 @@ plt.show()
 
 ###################Diagrama de barras#########################################
 
-users_locs = [[tweet.user.location] for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia", q = "chocoramo", 
-                           tweet_mode = "extended").items(100)]
+users_locs = [[tweet.user.location] for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia", q = busqueda, 
+                           tweet_mode = "extended").items(cantidad)]
 #users_locs
 
 #Analisis a Bogota
@@ -158,7 +155,7 @@ count += users_locs.count(['Cucuta '])
 listaC.append(count+1)
 
 
-valor = 100-sum(listaC)
+valor = cantidad-sum(listaC)
 listaC.append(valor)
 
 ypos = np.arange(len(listaC))
