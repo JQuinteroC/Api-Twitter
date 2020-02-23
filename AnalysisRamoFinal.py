@@ -33,6 +33,8 @@ def porcentaje(part, whole):
 #Funcion encargada de realizar el analisis de sentimientos a los tweets
 def sentimientos(busqueda, cantidad):
     #Variables a usar 
+    promedioPolaridad = 0
+    promedioPonderado = 0
     positivo = 0
     negativo = 0
     neutral = 0
@@ -96,13 +98,21 @@ def sentimientos(busqueda, cantidad):
     #Calcular el promedio de polaridad, (No es promedio ponderado)
     averagePolarity = (sum(polarity_list))/(len(polarity_list))
     averagePolarity = "{0:.0f}%".format(averagePolarity * 100)
+    
+    #Variable promedio de los tweets 
+    promedioPolaridad=averagePolarity
+    
     time  = datetime.now().strftime("Hora: %H:%M\nDia: %m-%d-%y")
     #Calculo de promedio ponderado
     weighted_avgPolarity=np.average(polarity_list, weights=numbers_list)
     weighted_avgPolarity = "{0:.0f}%".format(weighted_avgPolarity* 100)  
+    
+    #Variable de promedio para aporbacion o desapobacion
+    promedioPonderado=weighted_avgPolarity
+    
     #Texto con promedio de sentimiento
     plt.text(5, 0.9, "Promedio Sentimiento:  " + str(averagePolarity) + "\n" + "Promedio ponderado:  " + str(weighted_avgPolarity) + "\n" + time, fontsize=12, bbox = dict(facecolor='none', edgecolor='black', boxstyle='square, pad = 1'))
-    plt.title("Sentiment de " + busqueda + " en Twitter")
+    plt.title("Sentimiento de " + busqueda + " en Twitter")
     plt.xlabel("Numerp de Tweets")
     plt.ylabel("Sentimiento")
     plt.show()
@@ -189,12 +199,13 @@ def ciudades(palabra, cantidad):
     prueba = listaC
     #Impresion 
     plt.bar(ypos, prueba)
+    plt.title("Tweets de ciudades")
     plt.xticks(ypos, palabra)
     plt.show()
     
 #Funcion para retornar tweets en una fecha especifica
 def tweets(palabra, fecha1, fecha2, cantidad):
-    for tweet in tweepy.Cursor(api.search, screen_name="RamoColombia", q = palabra,tweet_mode = "extended",
+    for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia", q = palabra,tweet_mode = "extended",
                            since=fecha1, until=fecha2).items(cantidad):
         print(tweet._json["full_text"])
         print()
