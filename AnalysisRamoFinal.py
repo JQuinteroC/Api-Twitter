@@ -12,11 +12,17 @@ from textblob import TextBlob
 import matplotlib.pyplot as plt
 import time
 from datetime import datetime 
+"""
+consumer_key = "hctDhZRYK35Ofjd1aBZ54erVK"
+consumer_secret = "fu7lwB3FxCdZRzOCVFX4DgT1IcVBjU7KDiScY9DBjIqc3wGuRO"
+access_token = "1228054589422931970-SE3EbqQd4O72qYiphTDLzuzSuFCHex"
+access_token_secret = "fQAxtonQ1RBnxWYvlz1MrHxRoJDABA5oCblBPeN8rAcE6"
+""" 
 
-consumer_key = ""
-consumer_secret = ""
-access_token = ""
-access_token_secret = ""
+consumer_key = "bhIm9xUbUZCfZKAolMzZTxGhY"
+consumer_secret = "N18wGlNmoNDNCFiTDWgJLgW6U6RQ48663NWWfrZCQw0CXX5G0K"
+access_token = "1228080357624426497-lUdYfObZZDEaUwHIwlcr2ftnkCQnva"
+access_token_secret = "JlYBrbQPKx8XQSQeTKHl89qSXiwFJsLc5NidZHbpqGfZw"
         
 #instanciacion del objeto 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -206,12 +212,11 @@ def ciudades(palabra, cantidad):
     plt.clf()
     
 #Funcion para retornar tweets en una fecha especifica
-def tweets(palabra, fecha1, fecha2, cantidad):
-    palabra = palabra + " -filter:retweets"
+def tweets(palabra, fecha1,fecha2, cantidad):
+    topTweet = []
+    palabra = palabra 
     cantidad = 20
-    for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia",
-                            q = palabra,tweet_mode = "extended", since=fecha1,
-                            until=fecha2).items(cantidad):
-        print(tweet._json["full_text"])
-        print()
+    for tweet in tweepy.Cursor(api.search, q= palabra + " -filter:retweets", since = fecha1, until = fecha2, tweet_mode = "extended").items(cantidad):
+        topTweet.append(tweet._json["full_text"])
+    return topTweet
     
