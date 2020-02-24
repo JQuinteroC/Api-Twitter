@@ -12,17 +12,11 @@ from textblob import TextBlob
 import matplotlib.pyplot as plt
 import time
 from datetime import datetime 
-"""
-consumer_key = "hctDhZRYK35Ofjd1aBZ54erVK"
-consumer_secret = "fu7lwB3FxCdZRzOCVFX4DgT1IcVBjU7KDiScY9DBjIqc3wGuRO"
-access_token = "1228054589422931970-SE3EbqQd4O72qYiphTDLzuzSuFCHex"
-access_token_secret = "fQAxtonQ1RBnxWYvlz1MrHxRoJDABA5oCblBPeN8rAcE6"
-""" 
 
-consumer_key = "bhIm9xUbUZCfZKAolMzZTxGhY"
-consumer_secret = "N18wGlNmoNDNCFiTDWgJLgW6U6RQ48663NWWfrZCQw0CXX5G0K"
-access_token = "1228080357624426497-lUdYfObZZDEaUwHIwlcr2ftnkCQnva"
-access_token_secret = "JlYBrbQPKx8XQSQeTKHl89qSXiwFJsLc5NidZHbpqGfZw"
+consumer_key = ""
+consumer_secret = ""
+access_token = ""
+access_token_secret = ""
         
 #instanciacion del objeto 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
