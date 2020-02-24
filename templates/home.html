@@ -80,6 +80,15 @@
                         <img src="{{ url_for('static', filename='city.png') }}" alt="">
                     </div>
                 </div>
+
+                <div class="col control-group card" style="min-width: 300; max-width: 450;">
+                    <div class="card-body">
+                        <h5 class="card-title">Top 20 tweets</h5>
+                        {%for tweet in tweets%}
+                            <ul>{{tweet}}</ul>
+                        {%endfor%}
+                      </div>
+                </div>
             </div>
         </div>
     </div>
