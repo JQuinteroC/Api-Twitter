@@ -204,9 +204,9 @@ def ciudades(palabra, cantidad):
     plt.show()
     
 #Funcion para retornar tweets populares
-def tweets(palabra, cantidad):
+def tweets(palabra):
     for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia", 
-                               q = palabra,tweet_mode = "extended").items(cantidad):
+                               q = palabra,tweet_mode = "extended").items(20):
         print(tweet._json["full_text"])
         print()
     
@@ -220,5 +220,5 @@ if __name__ == '__main__':
     filtro = busqueda + " -filter:retweets"
     sentimientos(filtro, cantidad)
     ciudades(filtro, cantidad)
-    tweets(filtro, cantidad)
+    tweets(filtro)
     
