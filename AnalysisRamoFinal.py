@@ -203,10 +203,10 @@ def ciudades(palabra, cantidad):
     plt.xticks(ypos, palabra)
     plt.show()
     
-#Funcion para retornar tweets en una fecha especifica
-def tweets(palabra, fecha1, fecha2, cantidad):
-    for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia", q = palabra,tweet_mode = "extended",
-                           since=fecha1, until=fecha2).items(cantidad):
+#Funcion para retornar tweets populares
+def tweets(palabra, cantidad):
+    for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia", 
+                               q = palabra,tweet_mode = "extended").items(cantidad):
         print(tweet._json["full_text"])
         print()
     
@@ -220,5 +220,5 @@ if __name__ == '__main__':
     filtro = busqueda + " -filter:retweets"
     sentimientos(filtro, cantidad)
     ciudades(filtro, cantidad)
-    tweets(filtro, fecha1, fecha2, cantidad)
+    tweets(filtro, cantidad)
     
