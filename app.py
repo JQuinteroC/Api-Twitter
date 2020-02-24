@@ -8,16 +8,18 @@ app = Flask(__name__)
 def index():
     comment = form.CommentForm(request.form)
     consulta = False
+    tweets = []
     if request.method == 'POST' and comment.validate():
         consulta = True
         producto = comment.producto.data
         fecha1 = comment.fecha_In.data
-        fecah2 = comment.fecha_Out.data
+        fecha2 = comment.fecha_Out.data
         cantidad = comment.cantidadTw.data
         AnalysisRamoFinal.sentimientos(producto, cantidad)
         AnalysisRamoFinal.ciudades(producto, cantidad)
-        return render_template('home.html', form = comment, consulta = consulta)
-    return render_template('home.html', form = comment, consulta = consulta)
+        tweets = AnalysisRamoFinal.tweets(producto, fecha1,fecha2, cantidad)
+        return render_template('home.html', form = comment, consulta = consulta, tweets = tweets)
+    return render_template('home.html', form = comment, consulta = consulta, tweets = tweets)
     
 
 @app.errorhandler(404)
