@@ -22,7 +22,7 @@ access_token_secret = ""
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-#Instanciar opjeto de la clase api 
+#Instanciar objeto de la clase api 
 #Atributos para la delimitacion y que el programa no se detenga 
 api=tweepy.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
 
@@ -33,8 +33,7 @@ def porcentaje(part, whole):
 #Funcion encargada de realizar el analisis de sentimientos a los tweets
 def sentimientos(busqueda, cantidad):
     #Variables a usar 
-    promedioPolaridad = 0
-    promedioPonderado = 0
+    busqueda = busqueda + " -filter:retweets"
     positivo = 0
     negativo = 0
     neutral = 0
@@ -44,8 +43,8 @@ def sentimientos(busqueda, cantidad):
     number = 1
     
     #analisis de los tweets 
-    for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia",
-                               q = filtro).items(cantidad):
+    for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia", 
+                                q = busqueda).items(cantidad):
         analysis = TextBlob(tweet.text)
         polaridad += analysis.sentiment.polarity
         if(analysis.sentiment.polarity == 0):
@@ -66,18 +65,22 @@ def sentimientos(busqueda, cantidad):
     neutral = format(neutral, ".2f")
     
     #Impresion de la torta de porcentajes 
-    labels = ["Positivo["+str(positivo)+"%]", "Neutral["+str(neutral)+"%]", "Negativo["+str(negativo)+"%]"]
+    labels = ["Positivo["+str(positivo)+"%]", "Neutral["+str(neutral)+"%]",
+                 "Negativo["+str(negativo)+"%]"]
     sizes = [positivo, neutral, negativo]
-    colors = ["green","gold","red"]
+    colors = ["#0CB1EF","#F0EA35","#ED1C2E"]
     patches, texts = plt.pie(sizes, colors=colors, startangle=90)
     plt.legend(patches, labels, loc = "best")
     plt.title("Analisis a los sentimientos")
     plt.axis("equal")
     plt.tight_layout()
-    plt.show()
+    plt.savefig('static/feelings1.png')
+    plt.cla()
+    plt.clf()
     
     #Analisis a sentimientos de tweets 
-    for tweet in tweepy.Cursor(api.search, screen_name="RamoColombia" ,q = busqueda).items(cantidad):
+    for tweet in tweepy.Cursor(api.search, screen_name="RamoColombia", 
+                                q = busqueda).items(cantidad):
         try:
             analysis = TextBlob(tweet.text)
             analysis = analysis.sentiment
@@ -94,36 +97,34 @@ def sentimientos(busqueda, cantidad):
     #Creacion del plano cartesiano 
     axes = plt.gca()
     axes.set_ylim([-1, 2])
-    plt.scatter(numbers_list, polarity_list)
+    plt.scatter(numbers_list, polarity_list, color="#ED1C2E")
     #Calcular el promedio de polaridad, (No es promedio ponderado)
     averagePolarity = (sum(polarity_list))/(len(polarity_list))
     averagePolarity = "{0:.0f}%".format(averagePolarity * 100)
-    
-    #Variable promedio de los tweets 
-    promedioPolaridad=averagePolarity
-    
+
     time  = datetime.now().strftime("Hora: %H:%M\nDia: %m-%d-%y")
     #Calculo de promedio ponderado
     weighted_avgPolarity=np.average(polarity_list, weights=numbers_list)
     weighted_avgPolarity = "{0:.0f}%".format(weighted_avgPolarity* 100)  
-    
-    #Variable de promedio para aporbacion o desapobacion
-    promedioPonderado=weighted_avgPolarity
-    
+
     #Texto con promedio de sentimiento
-    plt.text(5, 0.9, "Promedio Sentimiento:  " + str(averagePolarity) + "\n" + "Promedio ponderado:  " + str(weighted_avgPolarity) + "\n" + time, fontsize=12, bbox = dict(facecolor='none', edgecolor='black', boxstyle='square, pad = 1'))
+    plt.text(5, 0.9, "Promedio Sentimiento:  " + str(averagePolarity) + "\n" + "Promedio ponderado:  " + str(weighted_avgPolarity) + "\n" + time,
+             fontsize=12, bbox = dict(facecolor='none', edgecolor='black', boxstyle='square, pad = 1'))
     plt.title("Sentimiento de " + busqueda + " en Twitter")
-    plt.xlabel("Numerp de Tweets")
+    plt.xlabel("Número de Tweets")
     plt.ylabel("Sentimiento")
-    plt.show()
-    
+    plt.savefig('static/feelings2.png')
+    plt.cla()
+    plt.clf()
+
 def ciudades(palabra, cantidad):
     #Variables
+    palabra = palabra + " -filter:retweets"
     count = 0
     listaC = []
     #Lista de ubicaciones de los tweets
-    users_locs = [[tweet.user.location] for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia", q = busqueda, 
-                           tweet_mode = "extended").items(cantidad)]
+    users_locs = [[tweet.user.location] for tweet in tweepy.Cursor(api.search, screen_name = "RamoColombia",
+                         q = palabra, tweet_mode = "extended").items(cantidad)]
    
     #Analisis a Bogota
     count += users_locs.count(['Bogotá'])
@@ -194,31 +195,23 @@ def ciudades(palabra, cantidad):
     listaC.append(valor)
     
     ypos = np.arange(len(listaC))
-    palabraAdicional = [0, 1, 2, 3, 4, 5, 6]
     palabra = ["Bogota", "Medellin", "Barranquilla", "Cali", "Cartagena", "Cucuta", "Otro"]
     prueba = listaC
     #Impresion 
-    plt.bar(ypos, prueba)
+    plt.bar(ypos, prueba, color="#0CB1EF")
     plt.title("Tweets de ciudades")
     plt.xticks(ypos, palabra)
-    plt.show()
+    plt.savefig('static/city.png')
+    plt.cla()
+    plt.clf()
     
 #Funcion para retornar tweets en una fecha especifica
 def tweets(palabra, fecha1, fecha2, cantidad):
-    for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia", q = palabra,tweet_mode = "extended",
-                           since=fecha1, until=fecha2).items(cantidad):
+    palabra = palabra + " -filter:retweets"
+    cantidad = 20
+    for tweet in tweepy.Cursor(api.user_timeline, screen_name="RamoColombia",
+                            q = palabra,tweet_mode = "extended", since=fecha1,
+                            until=fecha2).items(cantidad):
         print(tweet._json["full_text"])
         print()
-    
-#Main 
-if __name__ == '__main__':
-    #Ingreso de datos 
-    busqueda = input("Ingrese la palabra: ")
-    cantidad = int(input("Ingrese la cantidad: "))
-    fecha1 = input("Ingrese la fecha (aa/dd/mm): ")
-    fecha2 = input("Ingrese la fecha (aa/dd/mm): ")
-    filtro = busqueda + " -filter:retweets"
-    sentimientos(filtro, cantidad)
-    ciudades(filtro, cantidad)
-    tweets(filtro, fecha1, fecha2, cantidad)
     
